@@ -7,7 +7,7 @@ class Admin extends BaseClass {
   }
 
   //前台登录
-  userLoginasync = async (req, res, next) => {
+  userLogin = async (req, res, next) => {
     const { username, password } = req.body;
     const md5password = this.encryption(password);
     try {
@@ -16,25 +16,25 @@ class Admin extends BaseClass {
       if (!user) {
         //因为前端没有写注册功能 所以这里如果用户输入的账号名是不存在的 就创建一个新的账号
         const user_id = await this.getId("user_id");
-        const cityInfo = await this.getLocation(req, res);
+        // const cityInfo = await this.getLocation(req, res);
         const createData = {
           //创建一个新账号
           username, //用户名
           password: md5password, //用户密码
           id: user_id, //用户id
           status: 1, //1为用户 2为商家
-          city: cityInfo.city, //登录城市
+          //   city: cityInfo.city, //登录城市
           avatar: "http://i.waimai.meituan.com/static/img/default-avatar.png",
         };
         await new AdminModel(createData).save();
-        req.session.user_id = user_id; //设置session
+        // req.session.user_id = user_id; //设置session
         res.send({
           status: 200,
           success: "注册用户并登录成功",
         });
       } else if (md5password === user.password) {
         //用户输入的账号存在并且密码正确
-        req.session.user_id = user.id;
+        // req.session.user_id = user.id;
         res.send({
           status: 200,
           success: "登录成功",
@@ -94,6 +94,7 @@ class Admin extends BaseClass {
     }
   };
 
+  // 加密
   encryption = (password) => {
     const md5password = this.Md5(this.Md5(password)); // 两次加密
     return md5password;
@@ -103,11 +104,6 @@ class Admin extends BaseClass {
   Md5 = (password) => {
     const md5 = crypto.createHash("md5");
     return md5.update(password).digest("base64");
-  };
-
-  test = (req, res, next) => {
-    console.log("test");
-    res.send("ok");
   };
 }
 

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+// 记录每个表的数据的个数，用于插入时的id
 const idsSchema = new mongoose.Schema({
   restaurant_id: Number, //餐馆id
   food_id: Number, //食物id
