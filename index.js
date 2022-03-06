@@ -3,9 +3,9 @@ import "./mongodb/db.js";
 import express from "express";
 import bodyParser from "body-parser";
 import path from "path";
+import jwt from "express-jwt";
 import router from "./routes/index.js";
 const app = express();
-
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -31,6 +31,30 @@ app.all("*", (req, res, next) => {
 // 对post请求类型的参数，按照这个格式去解析
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({}));
+
+//注册中间件，相当于配置一个全局 token 验证，unless 就是上面说的白名单
+//把不需要 token 验证的请求填进 path 里即可, 支持数组、字符串、正则
+const SECRET_KEY = "agul123";
+app.use(
+  jwt({ secret: SECRET_KEY, algorithms: ["HS256"] }).unless({
+    path: [/^\/public\/.*/, "/admin/user_login"],
+  })
+);
+// Login api 和 public 下的文件都不需要 token 验证
+
+app.use(function (err, req, res, next) {
+  if (err.name === "UnauthorizedError") {
+    res.send({
+      status: 403,
+      message: "未登录",
+    });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.send("连接成功");
+});
+
 app.get("/", (req, res) => {
   res.send("连接成功");
 });

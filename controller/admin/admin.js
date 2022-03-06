@@ -27,19 +27,21 @@ class Admin extends BaseClass {
           avatar: "http://i.waimai.meituan.com/static/img/default-avatar.png",
         };
         await new AdminModel(createData).save();
-        // req.session.user_id = user_id; //设置session
+        this.setToken(user_id); //设置token
         res.send({
           status: 200,
+          token: this.token,
           success: "注册用户并登录成功",
         });
       } else if (md5password === user.password) {
         //用户输入的账号存在并且密码正确
-        // req.session.user_id = user.id;
+        this.setToken(user.id); //设置token
         res.send({
           status: 200,
           success: "登录成功",
           username: user.username, //用户名
           avatar: user.avatar, //用户头像
+          token: this.token,
         });
       } else {
         res.send({
@@ -93,6 +95,27 @@ class Admin extends BaseClass {
       });
     }
   };
+
+  //获取用户所有收货地址
+  async getAllAddress(req, res, next) {
+    console.log("getAllAddress");
+    res.send("getAllAddress");
+    console.log(req.user.user_id);
+    // try {
+    //   let address = await AddressModel.find({ user_id: req.user.user_id });
+    //   res.send({
+    //     status: 200,
+    //     address: address,
+    //     message: "获取地址成功",
+    //   });
+    // } catch (err) {
+    //   console.log("获取收货地址失败", err);
+    //   res.send({
+    //     status: -1,
+    //     message: "获取收货地址失败",
+    //   });
+    // }
+  }
 
   // 加密
   encryption = (password) => {

@@ -1,7 +1,8 @@
 import fetch from "node-fetch";
 import Ids from "../models/ids.js";
 import config from "../config.js";
-
+//先引入 jsonwebtoken
+import jsonWebToken from "jsonwebtoken";
 export default class BaseClass {
   constructor() {
     this.idList = [
@@ -16,6 +17,7 @@ export default class BaseClass {
       "pay_id",
       "comment_id",
     ];
+    this.token = "";
   }
 
   async fetch(url = "", data = {}, type = "GET", resType = "JSON") {
@@ -73,5 +75,26 @@ export default class BaseClass {
       console.log("获取ID数据失败");
       throw new Error(err);
     }
+  }
+
+  // 生成 token
+  setToken(user_id) {
+    //密钥，当然实际的项目中密钥应该变态一些
+    const SECRET_KEY = "agul123";
+
+    this.token = jsonWebToken.sign(
+      {
+        // Payload 部分，官方提供七个字段这边省略，可以携带一些可以识别用户的信息。例如 username。
+        // 千万不要是用敏感信息，例如密码，Payload 是可以解析出来的。
+        user_id: user_id,
+      },
+      SECRET_KEY,
+      {
+        expiresIn: "24h", //token有效期
+        // expiresIn: 60 * 60 * 24 * 7,  两种写法
+        // algorithm:"HS256"  默认使用 "HS256" 算法
+      }
+    );
+    console.log(this.token);
   }
 }
