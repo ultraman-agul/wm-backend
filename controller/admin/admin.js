@@ -128,6 +128,46 @@ class Admin extends BaseClass {
     const md5 = crypto.createHash("md5");
     return md5.update(password).digest("base64");
   };
+
+  // 前端将头像的地址传过来，将其更新到数据库
+  changeAvatar(req, res, next) {
+    //  token验证通过之后，使用req.user.user_id即可获取到用户的user_id
+    const { avatarUrl } = req.body;
+    console.log(avatarUrl);
+    const { user_id } = req.user;
+    AdminModel.updateOne({ id: user_id }, { avatar: avatarUrl })
+      .then(() => {
+        res.send({
+          status: 200,
+          message: "更换头像成功",
+        });
+      })
+      .catch((e) => {
+        res.send({
+          status: -1,
+          message: "更新头像失败",
+        });
+      });
+  }
+
+  // 获取用户信息
+  userInfo(req, res, next) {
+    const { user_id } = req.user;
+    AdminModel.findOne({ id: user_id }, "username avatar create_time status")
+      .then((data) => {
+        res.send({
+          status: 200,
+          data,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        res.send({
+          status: -1,
+          message: "获取用户信息失败",
+        });
+      });
+  }
 }
 
 export default new Admin();

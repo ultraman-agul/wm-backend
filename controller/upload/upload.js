@@ -8,6 +8,7 @@ class Upload extends BaseClass {
     super();
   }
 
+  // 用户头像上传
   upload(req, res) {
     const __dirname = path.resolve();
     const busboy = new Busboy({ headers: req.headers });
@@ -15,7 +16,7 @@ class Upload extends BaseClass {
     busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
       const saveTo = path.join(__dirname, "public/uploads", filename);
       // __dirname获取的是项目的根路径，而不是当前文件的路径！ 所以此处是根目录下的public/uploads
-      visitUrl = "/uploads" + filename;
+      visitUrl = "/uploads/" + filename;
       file.pipe(fs.createWriteStream(saveTo));
     });
 
