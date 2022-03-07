@@ -2,6 +2,7 @@ import config from "./config.js";
 import "./mongodb/db.js";
 import express from "express";
 import bodyParser from "body-parser";
+import multer from "multer";
 import path from "path";
 import jwt from "express-jwt";
 import router from "./routes/index.js";
@@ -37,7 +38,7 @@ app.use(bodyParser.json({}));
 const SECRET_KEY = "agul123";
 app.use(
   jwt({ secret: SECRET_KEY, algorithms: ["HS256"] }).unless({
-    path: [/^\/public\/.*/, "/admin/user_login"],
+    path: [/^\/public\/.*/, "/admin/user_login", "/upload", "/"],
   })
 );
 // Login api 和 public 下的文件都不需要 token 验证
@@ -51,12 +52,9 @@ app.use(function (err, req, res, next) {
   }
 });
 
+// 用于上传文件表单
 app.get("/", (req, res) => {
-  res.send("连接成功");
-});
-
-app.get("/", (req, res) => {
-  res.send("连接成功");
+  res.send("<h1>服务器正在运行...</h2>");
 });
 
 router(app);
