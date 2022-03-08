@@ -84,6 +84,33 @@ class Location extends BaseClass {
       });
     });
   };
+
+  //根据关键词搜索位置
+  locationSearch = async (req, res, next) => {
+    try {
+      const { keyword } = req.query;
+      const reqData = {
+        keyword: encodeURI(keyword),
+        key: config.tencentkey,
+        policy: 1,
+      };
+      const data = await this.fetch(
+        "http://apis.map.qq.com/ws/place/v1/suggestion",
+        reqData,
+        "GET"
+      );
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (err) {
+      res.send({
+        status: -1,
+        message: "搜索位置出错" + err,
+      });
+      console.log("搜索位置出错", err);
+    }
+  };
 }
 
 export default new Location();
