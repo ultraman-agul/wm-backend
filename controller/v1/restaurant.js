@@ -54,6 +54,31 @@ class Restaurant extends BaseClass {
     }
     return restaurants;
   }
+
+  //根据id获取指定餐馆信息
+  async getRestaurantById(req, res, next) {
+    const id = req.params.id;
+    if (!id) {
+      res.send({
+        status: -1,
+        message: "获取指定餐馆失败，参数有误",
+      });
+      return;
+    }
+    try {
+      let restaurant_data = await RestaurantModel.findOne({ id: id }, "-_id");
+      res.send({
+        status: 1,
+        message: "获取指定餐馆信息成功",
+        data: restaurant_data,
+      });
+    } catch (err) {
+      res.send({
+        status: -1,
+        message: "获取指定餐馆失败",
+      });
+    }
+  }
 }
 
 export default new Restaurant();

@@ -38,7 +38,15 @@ app.use(bodyParser.json({}));
 const SECRET_KEY = "agul123";
 app.use(
   jwt({ secret: SECRET_KEY, algorithms: ["HS256"] }).unless({
-    path: [/^\/public\/.*/, "/admin/user_login", "/upload", "/"],
+    path: [
+      /^\/public\/.*/,
+      "/admin/user_login",
+      "/upload",
+      "/",
+      "/v1/all_restaurant",
+      "/v1/location",
+      "/v1/location_search",
+    ],
   })
 );
 // Login api 和 public 下的文件都不需要 token 验证

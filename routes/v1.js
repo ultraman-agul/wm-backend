@@ -8,4 +8,5 @@ router.get("/location", Location.location); // 获取当前位置
 router.get("/location_search", Location.locationSearch); // 返回多个搜索地址结果，用于搜索建议
 
 router.get("/all_restaurant", Restaurant.allRestaurant);
+router.get("/restaurant/:id", Restaurant.getRestaurantById);
 export default router;
