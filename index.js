@@ -33,6 +33,16 @@ app.all("*", (req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({}));
 
+app.use((req, res, next) => {
+  console.log(req.path);
+  next();
+});
+
+app.get("/", (req, res) => {
+  console.log(111);
+  res.send("<h1>服务器正在运行...</h1>");
+});
+
 //注册中间件，相当于配置一个全局 token 验证，unless 就是上面说的白名单
 //把不需要 token 验证的请求填进 path 里即可, 支持数组、字符串、正则
 const SECRET_KEY = "agul123";
@@ -58,11 +68,6 @@ app.use(function (err, req, res, next) {
       message: "未登录",
     });
   }
-});
-
-// 用于上传文件表单
-app.get("/", (req, res) => {
-  res.send("<h1>服务器正在运行...</h2>");
 });
 
 router(app);

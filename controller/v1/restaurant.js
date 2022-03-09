@@ -68,7 +68,7 @@ class Restaurant extends BaseClass {
     try {
       let restaurant_data = await RestaurantModel.findOne({ id: id }, "-_id");
       res.send({
-        status: 1,
+        status: 200,
         message: "获取指定餐馆信息成功",
         data: restaurant_data,
       });

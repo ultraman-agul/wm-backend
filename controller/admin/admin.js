@@ -168,6 +168,23 @@ class Admin extends BaseClass {
         });
       });
   }
+
+  // 获取所有用户信息
+  getAllUserInfo(req, res, next) {
+    AdminModel.find({}, "-_id -password")
+      .then((data) => {
+        res.send({
+          status: 200,
+          data,
+        });
+      })
+      .catch((e) => {
+        res.send({
+          status: -1,
+          message: "获取所有用户信息失败",
+        });
+      });
+  }
 }
 
 export default new Admin();
