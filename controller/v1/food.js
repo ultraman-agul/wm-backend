@@ -1,18 +1,17 @@
-import FoodModel from "../../models/v1/foods";
-import CategoryModel from "../../models/v1/category";
-import RestaurantModel from "../../models/v1/restaurant";
+import FoodModel from "../../models/food.js";
+import CategoryModel from "../../models/category.js";
+import RestaurantModel from "../../models/restaurant.js";
+import BaseClass from "../../prototype/baseClass.js";
 
-import BaseClass from "../../prototype/baseClass";
-
-class Foods extends BaseClass {
+class Food extends BaseClass {
   constructor() {
     super();
   }
 
   //添加食物分类
   addCategory = async (req, res, next) => {
-    //category_name 餐馆名 restaurant_id 餐馆id
-    let { category_name, restaurant_id, icon } = req.body;
+    //category_name 分类名 restaurant_id 餐馆id
+    const { category_name, restaurant_id, icon } = req.body;
     if (!category_name || !restaurant_id) {
       res.send({
         status: -1,
@@ -20,8 +19,8 @@ class Foods extends BaseClass {
       });
       return;
     }
-    let category_id = await this.getId("category_id");
-    let category_data = {
+    const category_id = await this.getId("category_id");
+    const category_data = {
       id: category_id,
       name: category_name,
       restaurant_id,
@@ -29,7 +28,8 @@ class Foods extends BaseClass {
       spus: [],
     };
     try {
-      let category = await new CategoryModel(category_data).save();
+      const category = await new CategoryModel(category_data).save(); // 插入数据
+      console.log(category);
       res.send({
         status: 200,
         message: "添加分类成功",
@@ -44,3 +44,5 @@ class Foods extends BaseClass {
     }
   };
 }
+
+export default new Food();
