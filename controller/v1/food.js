@@ -60,6 +60,91 @@ class Food extends BaseClass {
       });
     }
   };
+
+  // 删除分类
+  async deleteCategory(req, res, next) {
+    let { category_id } = req.body;
+    try {
+      await CategoryModel.remove({ id: category_id });
+      res.send({
+        status: 200,
+        message: "删除成功",
+      });
+    } catch (err) {
+      console.log("删除出错");
+      res.send({
+        status: -1,
+        message: "删除出错",
+      });
+    }
+  }
+
+  //添加食物
+  addFood = async (req, res, next) => {
+    const {
+      restaurant_id,
+      category_id,
+      name,
+      min_price,
+      description,
+      pic_url,
+      detailDescription,
+      price,
+    } = req.body;
+    if (!category_id || !name) {
+      res.send({
+        status: -1,
+        message: "添加食物失败，参数有误!",
+      });
+      return;
+    }
+    try {
+      // const restaurant = await RestaurantModel.findOne({
+      //   user_id: req.session.admin_id,
+      // });
+      const skus = [
+        {
+          description: detailDescription,
+          price,
+        },
+      ];
+      for (let i = 0; i < skus.length; i++) {
+        let sku_id = await this.getId("sku_id");
+        skus[i]["id"] = sku_id;
+      }
+      const month_saled = Math.ceil(Math.random() * 50); //随机生成一个月售数量
+      const food_id = await this.getId("food_id"); // 获取最新的food id
+      const food_data = {
+        id: food_id,
+        restaurant_id,
+        category_id,
+        name,
+        praise_num: Math.ceil(Math.random() * 50), //点赞数量
+        month_saled,
+        month_saled_content: `${month_saled}`,
+        min_price,
+        description,
+        pic_url,
+        skus,
+      };
+      const addFoods = await new FoodModel(food_data).save(); // 插入数据到食品表
+      console.log(addFoods);
+      const category = await CategoryModel.findOne({ id: category_id }); // 根据类型id找到类型表
+      const updateCategory = category.spus.push(addFoods._id); // 添加食品id到分类表中的某个分类
+      await category.save(); // 保存分类表
+      res.send({
+        status: 200,
+        message: "添加食物成功",
+        food_id,
+      });
+    } catch (err) {
+      console.log("添加食物失败", err);
+      res.send({
+        status: -1,
+        message: "添加食物失败",
+      });
+    }
+  };
 }
 
 export default new Food();

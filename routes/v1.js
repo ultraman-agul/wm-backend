@@ -14,4 +14,6 @@ router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
 
 router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
 router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
+router.post("/deleteCategory", Foods.deleteCategory); // 根据分类id删除食品分类
+router.post("/addFood", Foods.addFood); // 添加食品
 export default router;
