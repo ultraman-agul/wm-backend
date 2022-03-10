@@ -10,7 +10,8 @@ router.get("/location_search", Location.locationSearch); // 返回多个搜索�
 
 router.get("/all_restaurant", Restaurant.allRestaurant); // 获取所有餐厅
 router.get("/restaurant/:id", Restaurant.getRestaurantById); // 根据id获取餐厅信息
+router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
 
 router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
-
+router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
 export default router;

@@ -19,7 +19,7 @@ class Food extends BaseClass {
       });
       return;
     }
-    const category_id = await this.getId("category_id");
+    const category_id = await this.getId("category_id"); // 插入前获取下一个id
     const category_data = {
       id: category_id,
       name: category_name,
@@ -40,6 +40,23 @@ class Food extends BaseClass {
       res.send({
         status: -1,
         message: "添加分类失败",
+      });
+    }
+  };
+
+  // 根据餐厅id获取餐厅的食品分类
+  getCategories = async (req, res, next) => {
+    try {
+      const { restaurant_id } = req.query;
+      const data = await CategoryModel.find({ restaurant_id }, "-_id id name");
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (e) {
+      res.send({
+        status: -1,
+        message: e,
       });
     }
   };
