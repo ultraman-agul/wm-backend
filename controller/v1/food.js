@@ -145,6 +145,35 @@ class Food extends BaseClass {
       });
     }
   };
+
+  //获取食物列表
+  getFoods = async (req, res, next) => {
+    const { restaurant_id } = req.query;
+    if (!restaurant_id) {
+      res.send({
+        status: -1,
+        message: "获取食物失败，参数有误",
+      });
+      return;
+    }
+    try {
+      // 在定义Schema的时候，如果设置某个 field 关联另一个Schema，那么在获取 document 的时候就可以使用 Population 功能通过关联Schema的 field 找到关联的另一个 document，并且用被关联 document 的内容替换掉原来关联字段(field)的内容。
+      let foods = await CategoryModel.find({ restaurant_id }, "-_id").populate({
+        path: "spus",
+      });
+      res.send({
+        status: 200,
+        message: "获取食物列表成功",
+        data: foods,
+      });
+    } catch (err) {
+      console.log("获取餐馆食物失败", err);
+      res.send({
+        status: -1,
+        message: "获取餐馆食物失败",
+      });
+    }
+  };
 }
 
 export default new Food();
