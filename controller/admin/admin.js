@@ -96,27 +96,6 @@ class Admin extends BaseClass {
     }
   };
 
-  //获取用户所有收货地址
-  async getAllAddress(req, res, next) {
-    console.log("getAllAddress");
-    res.send("getAllAddress");
-    console.log(req.user.user_id);
-    // try {
-    //   let address = await AddressModel.find({ user_id: req.user.user_id });
-    //   res.send({
-    //     status: 200,
-    //     address: address,
-    //     message: "获取地址成功",
-    //   });
-    // } catch (err) {
-    //   console.log("获取收货地址失败", err);
-    //   res.send({
-    //     status: -1,
-    //     message: "获取收货地址失败",
-    //   });
-    // }
-  }
-
   // 加密
   encryption = (password) => {
     const md5password = this.Md5(this.Md5(password)); // 两次加密
