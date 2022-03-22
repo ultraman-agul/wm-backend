@@ -81,6 +81,37 @@ class Order extends BaseClass {
     total_price += shipping_fee ? shipping_fee : 0;
     return { total_price, order_foods };
   };
+
+  // 获取用户的订单列表,可分页
+  getOrder = async (req, res, next) => {
+    let { offset = 0, limit = 10 } = req.query;
+    try {
+      let userInfo = await AdminModel.findOne({ id: req.user.user_id });
+      console.log(userInfo);
+      let orders = await OrderModel.find(
+        {
+          //   code: 200,
+          user_id: userInfo._id,
+        },
+        "-_id"
+      )
+        .populate([{ path: "restaurant" }, { path: "address" }])
+        .limit(Number(limit))
+        .sort({ create_time_timestamp: -1 })
+        .skip(Number(offset));
+      res.send({
+        status: 200,
+        data: orders,
+        message: "获取我的订单列表成功",
+      });
+    } catch (err) {
+      console.log("获取订单列表失败", err);
+      res.send({
+        status: -1,
+        message: "获取订单列表失败",
+      });
+    }
+  };
 }
 
 export default new Order();
