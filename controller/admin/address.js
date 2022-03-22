@@ -48,9 +48,10 @@ class Address extends BaseClass {
         user_id: req.user.user_id,
         id: address_id,
       };
-      await new AddressModel(insertData).save();
+      const address = await new AddressModel(insertData).save();
       res.send({
         status: 200,
+        address,
         message: "新增收货地址成功",
       });
     } catch (e) {
