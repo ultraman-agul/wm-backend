@@ -21,4 +21,5 @@ router.get("/getFoods", Foods.getFoods);
 // 订单
 router.post("/order", Order.makeOrder); // 提交订单,生成订单
 router.get("/getOrder", Order.getOrder); // 获取用户的订单, 可以分页
+router.get("/orderInfo", Order.orderInfo); // 获取订单详细信息
 export default router;

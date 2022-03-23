@@ -112,6 +112,26 @@ class Order extends BaseClass {
       });
     }
   };
+
+  orderInfo = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      const data = await OrderModel.findOne({ id }, "-_id").populate([
+        { path: "restaurant" },
+        { path: "address" },
+      ]);
+      res.send({
+        status: 200,
+        data,
+      });
+      console.log(data);
+    } catch {
+      res.send({
+        status: -1,
+        message: "获取订单详情失败",
+      });
+    }
+  };
 }
 
 export default new Order();
