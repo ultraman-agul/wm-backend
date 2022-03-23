@@ -3,7 +3,7 @@ import Location from "../controller/v1/location.js";
 import Restaurant from "../controller/v1/restaurant.js";
 import Foods from "../controller/v1/food.js";
 import Order from "../controller/v1/order.js";
-
+import Comment from "../controller/v1/comment.js";
 const router = express.Router();
 // 位置
 router.get("/location", Location.location); // 获取当前位置
@@ -22,4 +22,7 @@ router.get("/getFoods", Foods.getFoods);
 router.post("/order", Order.makeOrder); // 提交订单,生成订单
 router.get("/getOrder", Order.getOrder); // 获取用户的订单, 可以分页
 router.get("/orderInfo", Order.orderInfo); // 获取订单详细信息
+// 评价
+router.post("/makeComment", Comment.makeComment); // 获取订单详细信息
+
 export default router;

@@ -61,8 +61,9 @@ class Upload extends BaseClass {
     let visitUrl;
     busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
       const saveTo = path.join(__dirname, "public/commentPic", filename);
-      // __dirname获取的是项目的根路径，而不是当前文件的路径！ 所以此处是根目录下的public/foods
+      // __dirname获取的是项目的根路径，而不是当前文件的路径！ 所以此处是根目录下的public/commentPic
       visitUrl = "/commentPic/" + filename;
+      console.log(visitUrl);
       file.pipe(fs.createWriteStream(saveTo));
     });
 
