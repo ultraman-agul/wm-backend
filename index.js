@@ -56,6 +56,7 @@ app.use(
       "/v1/all_restaurant",
       "/v1/location",
       "/v1/location_search",
+      "/alipay/successPay",
     ],
   })
 );

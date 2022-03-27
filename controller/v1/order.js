@@ -114,7 +114,8 @@ class Order extends BaseClass {
   };
 
   orderInfo = async (req, res, next) => {
-    const { id } = req.query;
+    const { order_id: id } = req.query;
+    console.log(id);
     try {
       const data = await OrderModel.findOne({ id }, "-_id").populate([
         { path: "restaurant" },
