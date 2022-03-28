@@ -24,5 +24,5 @@ router.get("/getOrder", Order.getOrder); // 获取用户的订单, 可以分页
 router.get("/orderInfo", Order.orderInfo); // 获取订单详细信息
 // 评价
 router.post("/makeComment", Comment.makeComment); // 获取订单详细信息
-
+router.get("/restaurantComment", Comment.restaurantComment); // 获取商家评论
 export default router;

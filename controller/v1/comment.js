@@ -91,6 +91,34 @@ class Comment extends BaseClass {
       });
     }
   };
+
+  restaurantComment = async (req, res, next) => {
+    let { restaurant_id, offset = 0, limit = 5 } = req.query;
+    if (!restaurant_id) {
+      res.send({
+        status: -1,
+        message: "获取餐馆评论失败，参数有误！",
+      });
+      return;
+    }
+    try {
+      let comments = await CommentModel.find({ restaurant_id }, "-_id")
+        .skip(offset * limit)
+        .limit(Number(limit))
+        .sort({ comment_time: -1 });
+      res.send({
+        status: 200,
+        message: "获取餐馆评论成功",
+        data: comments,
+      });
+    } catch (err) {
+      console.log("获取餐馆评论失败", err);
+      res.send({
+        status: -1,
+        message: "获取餐馆评论失败",
+      });
+    }
+  };
 }
 
 export default new Comment();
