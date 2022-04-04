@@ -12,6 +12,9 @@ router.get("/location_search", Location.locationSearch); // 返回多个搜索�
 router.get("/all_restaurant", Restaurant.allRestaurant); // 获取所有餐厅
 router.get("/restaurant/:id", Restaurant.getRestaurantById); // 根据id获取餐厅信息
 router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
+router.get("/hasShop", Restaurant.getHasShop); // 判断用户是否拥有商店
+router.post("/createShop", Restaurant.createShop);
+
 // 分类，食物
 router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
 router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
@@ -25,4 +28,5 @@ router.get("/orderInfo", Order.orderInfo); // 获取订单详细信息
 // 评价
 router.post("/makeComment", Comment.makeComment); // 获取订单详细信息
 router.get("/restaurantComment", Comment.restaurantComment); // 获取商家评论
+
 export default router;

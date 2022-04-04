@@ -98,6 +98,106 @@ class Restaurant extends BaseClass {
       });
     }
   };
+
+  // 获取用户是否已经注册了店铺，一个用户只能有一家
+  getHasShop = async (req, res, next) => {
+    try {
+      let restaurants = ""; //餐馆信息
+      restaurants = await RestaurantModel.findOne(
+        { user_id: req.user.user_id },
+        "-_id"
+      );
+      if (restaurants) {
+        res.send({
+          status: 200,
+          message: "已存在商店",
+          data: restaurants,
+        });
+      } else {
+        res.send({
+          status: 200,
+          message: "未注册商店",
+          data: false,
+        });
+      }
+    } catch (err) {
+      res.send({
+        status: -1,
+        message: "判断是否拥有商店失败",
+      });
+    }
+  };
+
+  // 创建商店
+  createShop = async (req, res, next) => {
+    try {
+      const {
+        shipping_fee,
+        lat,
+        lng,
+        pic_url,
+        name,
+        classify,
+        call_center,
+        address,
+        start_time,
+        end_time,
+        min_price,
+        activities,
+      } = req.body;
+      const discounts2 = [];
+      const discountPic = [
+        "http://p0.meituan.net/xianfu/f8bc8dffdbc805878aa3801a33f563cd1001.png",
+        "http://p1.meituan.net/xianfu/9c997ecce6150671b8459738a26f8bd9767.png",
+        "http://p0.meituan.net/xianfu/019d1bbb1310b1531e6af6172c9a5095581.png",
+      ];
+      activities.forEach((item, index) => {
+        discounts2.push({
+          promotion_type: 2,
+          icon_url: discountPic[index] ?? "",
+          info: item.value,
+        });
+      });
+      const id = await this.getId("restaurant_id");
+      const data = {
+        id,
+        user_id: req.user.user_id,
+        shipping_fee,
+        lat,
+        lng,
+        pic_url,
+        name,
+        third_category: classify,
+        call_center,
+        address,
+        start_time,
+        end_time,
+        min_price,
+        discounts2,
+        month_sales: 0,
+        month_sales_tip: 0,
+        wm_poi_score: 0,
+        delivery_score: 0,
+        quality_score: 0,
+        pack_score: 0,
+        food_score: 0,
+        comment_number: 0,
+      };
+      const shop = new RestaurantModel(data);
+      await shop.save();
+      res.send({
+        status: 200,
+        message: "创建商店成功!",
+        data: shop,
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+        message: "创建商店失败!",
+      });
+    }
+  };
 }
 
 export default new Restaurant();

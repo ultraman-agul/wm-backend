@@ -8,12 +8,28 @@ class Admin extends BaseClass {
 
   //前台登录
   userLogin = async (req, res, next) => {
-    const { username, password } = req.body;
+    let { username, password, status } = req.body;
+    if (!status) {
+      // 没有传status则是普通用户
+      status = 1;
+    }
     const md5password = this.encryption(password);
     try {
-      const user = await AdminModel.findOne({ username, status: 1 });
-
+      let user = await AdminModel.findOne({ username, status });
       if (!user) {
+        // 判断用户是否是超级管理员
+        user = await AdminModel.findOne({ username, status: 3 });
+        if (user && user.password === md5password) {
+          this.setToken(user.id); //设置token
+          return res.send({
+            status: 200,
+            message: "登录成功",
+            username: user.username, //用户名
+            avatar: user.avatar, //用户头像
+            token: this.token,
+          });
+        }
+
         //因为前端没有写注册功能 所以这里如果用户输入的账号名是不存在的 就创建一个新的账号
         const user_id = await this.getId("user_id");
         // const cityInfo = await this.getLocation(req, res);
@@ -22,7 +38,7 @@ class Admin extends BaseClass {
           username, //用户名
           password: md5password, //用户密码
           id: user_id, //用户id
-          status: 1, //1为用户 2为商家
+          status, //1为用户 2为商家
           //   city: cityInfo.city, //登录城市
           avatar: "http://i.waimai.meituan.com/static/img/default-avatar.png",
         };
@@ -31,14 +47,14 @@ class Admin extends BaseClass {
         res.send({
           status: 200,
           token: this.token,
-          success: "注册用户并登录成功",
+          message: "注册用户并登录成功",
         });
       } else if (md5password === user.password) {
         //用户输入的账号存在并且密码正确
         this.setToken(user.id); //设置token
         res.send({
           status: 200,
-          success: "登录成功",
+          message: "登录成功",
           username: user.username, //用户名
           avatar: user.avatar, //用户头像
           token: this.token,
@@ -77,7 +93,7 @@ class Admin extends BaseClass {
         let createAdmin = await new AdminModel(createData).save();
         res.send({
           status: 200,
-          success: "新增用户成功",
+          message: "新增用户成功",
           username: createAdmin.username,
           avatar: createAdmin.avatar,
         });
