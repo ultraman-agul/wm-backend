@@ -1,6 +1,7 @@
 import BaseClass from "../../prototype/baseClass.js";
 import RestaurantModel from "../../models/restaurant.js";
 import config from "../../config.js";
+
 class Restaurant extends BaseClass {
   constructor() {
     super();
@@ -144,6 +145,8 @@ class Restaurant extends BaseClass {
         end_time,
         min_price,
         activities,
+        bulletin,
+        delivery,
       } = req.body;
       const discounts2 = [];
       const discountPic = [
@@ -167,11 +170,11 @@ class Restaurant extends BaseClass {
         lng,
         pic_url,
         name,
-        third_category: classify,
+        category: classify,
         call_center,
         address,
-        start_time,
-        end_time,
+        shopping_time_start: start_time,
+        shopping_time_end: end_time,
         min_price,
         discounts2,
         month_sales: 0,
@@ -182,6 +185,8 @@ class Restaurant extends BaseClass {
         pack_score: 0,
         food_score: 0,
         comment_number: 0,
+        bulletin,
+        delivery,
       };
       const shop = new RestaurantModel(data);
       await shop.save();
@@ -195,6 +200,70 @@ class Restaurant extends BaseClass {
       res.send({
         status: -1,
         message: "创建商店失败!",
+      });
+    }
+  };
+
+  // 获取商家的店铺,根据商家id获取
+  getShopInfo = async (req, res, next) => {
+    try {
+      const { user_id } = req.user;
+      const data = await RestaurantModel.findOne({ user_id });
+      if (data) {
+        res.send({
+          status: 200,
+          message: "获取店铺信息成功",
+          data,
+        });
+      } else {
+        res.send({
+          status: -1,
+          message: "暂未注册店铺",
+        });
+      }
+    } catch {
+      res.send({
+        status: -1,
+        message: "获取店铺信息失败",
+      });
+    }
+  };
+
+  updateActivities = async (req, res, next) => {
+    try {
+      let { data, shopId } = req.query;
+      data = JSON.parse(data);
+      console.log(data);
+      if (data.icon_url) {
+        console.log(1111);
+        const result = await RestaurantModel.updateOne(
+          { id: shopId },
+          {
+            $push: {
+              discounts2: { info: data.info, icon_url: data.icon_url },
+            },
+          }
+        );
+        console.log(result);
+      } else {
+        console.log(222);
+
+        await RestaurantModel.updateOne(
+          { id: shopId },
+          {
+            $pull: { discounts2: { info: data.info } },
+          }
+        );
+      }
+      res.send({
+        status: 200,
+        message: "修改活动列表成功",
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+        message: "修改活动列表失败",
       });
     }
   };

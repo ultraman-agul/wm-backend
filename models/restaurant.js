@@ -19,7 +19,8 @@ const restaurantSchema = new Schema({
   shipping_fee_tip: String, //配送费提示
   min_price_tip: String, //最低价起送提示
   average_price_tip: String, //平均费
-  third_category: String, //中式简餐
+  category: String, //中式简餐
+  delivery: String, // 配送服务
   discounts2: [], //折扣
   shipping_time: String, //经营时间
   shopping_time_start: String, //开始经营时间

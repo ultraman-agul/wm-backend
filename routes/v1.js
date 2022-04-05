@@ -13,8 +13,9 @@ router.get("/all_restaurant", Restaurant.allRestaurant); // 获取所有餐厅
 router.get("/restaurant/:id", Restaurant.getRestaurantById); // 根据id获取餐厅信息
 router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
 router.get("/hasShop", Restaurant.getHasShop); // 判断用户是否拥有商店
-router.post("/createShop", Restaurant.createShop);
-
+router.post("/createShop", Restaurant.createShop); // 创建商店
+router.get("/getShopInfo", Restaurant.getShopInfo); // 获取商店信息
+router.get("/updateActivities", Restaurant.updateActivities); // 更新活动列表
 // 分类，食物
 router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
 router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
