@@ -138,11 +138,11 @@ class Restaurant extends BaseClass {
         lng,
         pic_url,
         name,
-        classify,
+        category,
         call_center,
         address,
-        start_time,
-        end_time,
+        shopping_time_start,
+        shopping_time_end,
         min_price,
         activities,
         bulletin,
@@ -170,11 +170,11 @@ class Restaurant extends BaseClass {
         lng,
         pic_url,
         name,
-        category: classify,
+        category,
         call_center,
         address,
-        shopping_time_start: start_time,
-        shopping_time_end: end_time,
+        shopping_time_start,
+        shopping_time_end,
         min_price,
         discounts2,
         month_sales: 0,
@@ -200,6 +200,25 @@ class Restaurant extends BaseClass {
       res.send({
         status: -1,
         message: "创建商店失败!",
+      });
+    }
+  };
+
+  updateShop = async (req, res, next) => {
+    try {
+      await RestaurantModel.updateOne(
+        { user_id: req.user.user_id },
+        { ...req.body }
+      );
+      res.send({
+        status: 200,
+        message: "更新信息成功!",
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+        message: "更新信息失败!",
       });
     }
   };
