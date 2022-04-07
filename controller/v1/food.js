@@ -99,7 +99,10 @@ class Food extends BaseClass {
       return;
     }
     try {
-      const cateObj = await CategoryModel.findOne({ name: category }, "id");
+      const cateObj = await CategoryModel.findOne(
+        { name: category, restaurant_id },
+        "id"
+      ); // 查询分类表是否存在该餐馆的该分类
       let category_id = cateObj ? cateObj.id : null;
       console.log(category_id);
       if (!category_id) {

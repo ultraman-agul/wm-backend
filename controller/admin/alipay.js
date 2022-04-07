@@ -38,9 +38,17 @@ class Pay {
     try {
       const { id } = req.query;
       await OrderModel.updateOne({ id }, { status: "已支付", code: 200 });
-      res.send("<h2>支付成功</h2>");
+      // res.send("<h2>支付成功</h2>");
+      res.send({
+        status: 200,
+        message: "支付成功",
+      });
     } catch (e) {
       console.log(e);
+      res.send({
+        status: -1,
+        message: "支付失败",
+      });
     }
   };
 }

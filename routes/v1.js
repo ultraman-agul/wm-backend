@@ -29,6 +29,9 @@ router.get("/deleteFood", Foods.deleteFood);
 router.post("/order", Order.makeOrder); // 提交订单,生成订单
 router.get("/getOrder", Order.getOrder); // 获取用户的订单, 可以分页
 router.get("/orderInfo", Order.orderInfo); // 获取订单详细信息
+router.get("/getOrderByRestaurantId", Order.getOrderByRestaurantId); // 获取商家的所有订单
+router.get("/getTodayOrderByRestaurantId", Order.getTodayOrderByRestaurantId); // 获取商家的今日订单
+
 // 评价
 router.post("/makeComment", Comment.makeComment); // 获取订单详细信息
 router.get("/restaurantComment", Comment.restaurantComment); // 获取商家评论
