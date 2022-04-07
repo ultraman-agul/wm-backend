@@ -246,6 +246,22 @@ class Food extends BaseClass {
       });
     }
   };
+
+  deleteFood = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      await FoodModel.findOneAndDelete({ id });
+      res.send({
+        status: 200,
+        message: "删除成功",
+      });
+    } catch (e) {
+      res.send({
+        status: -1,
+        message: "删除失败",
+      });
+    }
+  };
 }
 
 export default new Food();

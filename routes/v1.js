@@ -24,6 +24,7 @@ router.post("/deleteCategory", Foods.deleteCategory); // 根据分类id删除食
 router.post("/addFood", Foods.addFood); // 添加食品
 router.post("/setFood", Foods.setFood); // 修改食品信息
 router.get("/getFoods", Foods.getFoods);
+router.get("/deleteFood", Foods.deleteFood);
 // 订单
 router.post("/order", Order.makeOrder); // 提交订单,生成订单
 router.get("/getOrder", Order.getOrder); // 获取用户的订单, 可以分页
