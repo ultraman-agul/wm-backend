@@ -106,9 +106,11 @@ class Comment extends BaseClass {
         .skip(offset * limit)
         .limit(Number(limit))
         .sort({ comment_time: -1 });
+      let allData = await CommentModel.find({ restaurant_id }, "-_id");
       res.send({
         status: 200,
         message: "获取餐馆评论成功",
+        totalNum: allData.length,
         data: comments,
       });
     } catch (err) {
@@ -116,6 +118,28 @@ class Comment extends BaseClass {
       res.send({
         status: -1,
         message: "获取餐馆评论失败",
+      });
+    }
+  };
+
+  replyComment = async (req, res, next) => {
+    const { id, reply_data } = req.query;
+    try {
+      const comment = await CommentModel.findOne({ id });
+      console.log(comment);
+      comment.add_comment_list.push({
+        content: reply_data,
+      });
+      comment.save();
+      res.send({
+        status: 200,
+        message: "回复成功",
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+        message: "回复失败",
       });
     }
   };

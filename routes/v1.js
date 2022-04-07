@@ -35,5 +35,5 @@ router.get("/getTodayOrderByRestaurantId", Order.getTodayOrderByRestaurantId); /
 // 评价
 router.post("/makeComment", Comment.makeComment); // 获取订单详细信息
 router.get("/restaurantComment", Comment.restaurantComment); // 获取商家评论
-
+router.get("/replyComment", Comment.replyComment);
 export default router;
