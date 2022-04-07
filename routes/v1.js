@@ -22,6 +22,7 @@ router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
 router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
 router.post("/deleteCategory", Foods.deleteCategory); // 根据分类id删除食品分类
 router.post("/addFood", Foods.addFood); // 添加食品
+router.post("/setFood", Foods.setFood); // 修改食品信息
 router.get("/getFoods", Foods.getFoods);
 // 订单
 router.post("/order", Order.makeOrder); // 提交订单,生成订单

@@ -79,11 +79,11 @@ class Food extends BaseClass {
     }
   }
 
-  //添加食物
+  //添加食物  传入食物分类名， 如果没有该分类则添加分类，如果有，则不添加
   addFood = async (req, res, next) => {
     const {
       restaurant_id,
-      category_id,
+      category,
       name,
       min_price,
       description,
@@ -91,7 +91,7 @@ class Food extends BaseClass {
       detailDescription,
       price,
     } = req.body;
-    if (!category_id || !name) {
+    if (!category || !name) {
       res.send({
         status: -1,
         message: "添加食物失败，参数有误!",
@@ -99,9 +99,19 @@ class Food extends BaseClass {
       return;
     }
     try {
-      // const restaurant = await RestaurantModel.findOne({
-      //   user_id: req.session.admin_id,
-      // });
+      const cateObj = await CategoryModel.findOne({ name: category }, "id");
+      let category_id = cateObj ? cateObj.id : null;
+      console.log(category_id);
+      if (!category_id) {
+        category_id = await this.getId("category_id"); // 插入前获取下一个id
+        const category_data = {
+          id: category_id,
+          name: category,
+          restaurant_id,
+          spus: [],
+        };
+        await new CategoryModel(category_data).save(); // 插入数据
+      }
       const skus = [
         {
           description: detailDescription,
@@ -129,9 +139,9 @@ class Food extends BaseClass {
       };
       const addFoods = await new FoodModel(food_data).save(); // 插入数据到食品表
       console.log(addFoods);
-      const category = await CategoryModel.findOne({ id: category_id }); // 根据类型id找到类型表
-      const updateCategory = category.spus.push(addFoods._id); // 添加食品id到分类表中的某个分类
-      await category.save(); // 保存分类表
+      const categoryObj = await CategoryModel.findOne({ id: category_id }); // 根据类型id找到类型表
+      const updateCategory = categoryObj.spus.push(addFoods._id); // 添加食品id到分类表中的某个分类
+      await categoryObj.save(); // 保存分类表
       res.send({
         status: 200,
         message: "添加食物成功",
@@ -171,6 +181,68 @@ class Food extends BaseClass {
       res.send({
         status: -1,
         message: "获取餐馆食物失败",
+      });
+    }
+  };
+
+  // 修改食物信息
+  setFood = async (req, res, next) => {
+    const {
+      restaurant_id,
+      category,
+      name,
+      min_price,
+      description,
+      pic_url,
+      detailDescription,
+      price,
+      food_id,
+    } = req.body;
+    try {
+      const cateObj = await CategoryModel.findOne({ name: category }, "id");
+      let category_id = cateObj ? cateObj.id : null;
+      console.log(category_id);
+      if (!category_id) {
+        category_id = await this.getId("category_id"); // 插入前获取下一个id
+        const category_data = {
+          id: category_id,
+          name: category,
+          restaurant_id,
+          spus: [],
+        };
+        await new CategoryModel(category_data).save(); // 插入数据
+      }
+      const skus = [
+        {
+          description: detailDescription,
+          price,
+        },
+      ];
+      const food_data = {
+        category_id,
+        name,
+        min_price,
+        description,
+        pic_url,
+        skus,
+      };
+      const updateFood = await FoodModel.updateOne({ id: food_id }, food_data); // 插入数据到食品表
+      console.log(updateFood);
+      const categoryObj = await CategoryModel.findOne({ id: category_id }); // 根据类型id找到类型表
+      if (categoryObj.spus.indexOf(updateFood._id) == -1) {
+        categoryObj.spus.push(updateFood._id); // 添加食品id到分类表中的某个分类
+        await categoryObj.save(); // 保存分类表
+      }
+      res.send({
+        status: 200,
+        message: "修改食物成功",
+        food_id,
+      });
+    } catch (err) {
+      console.log("修改食物失败", err);
+      res.send({
+        status: -1,
+        message: "修改食物失败",
       });
     }
   };
