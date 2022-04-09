@@ -196,6 +196,28 @@ class Order extends BaseClass {
       });
     }
   };
+
+  orderGroupByDay = async (req, res, next) => {
+    const { restaurant_id } = req.query;
+    console.log(restaurant_id);
+    try {
+      const data = await OrderModel.aggregate([
+        { $match: { restaurant_id: Number(restaurant_id) } },
+        { $project: { day: { $substr: ["$create_time", 0, 10] } } },
+        { $group: { _id: "$day", number: { $sum: 1 } } },
+        { $sort: { _id: -1 } },
+      ]);
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+      });
+    }
+  };
 }
 
 export default new Order();

@@ -2,6 +2,8 @@ import BaseClass from "../../prototype/baseClass.js";
 import AdminModel from "../../models/admin.js";
 import OrderModel from "../../models/order.js";
 import CommentModel from "../../models/comment.js";
+import Order from "../../models/order.js";
+import food from "./food.js";
 
 class Comment extends BaseClass {
   constructor() {
@@ -107,11 +109,20 @@ class Comment extends BaseClass {
         .limit(Number(limit))
         .sort({ comment_time: -1 });
       let allData = await CommentModel.find({ restaurant_id }, "-_id");
-      res.send({
-        status: 200,
-        message: "获取餐馆评论成功",
-        totalNum: allData.length,
-        data: comments,
+
+      let foodData = [];
+      comments.forEach(async (item, index) => {
+        let foods = await OrderModel.findOne({ id: item.order_id }, "foods");
+        foodData.push(foods.foods);
+        if (index === comments.length - 1) {
+          res.send({
+            status: 200,
+            message: "获取餐馆评论成功",
+            totalNum: allData.length,
+            data: comments,
+            foodData: foodData,
+          });
+        }
       });
     } catch (err) {
       console.log("获取餐馆评论失败", err);
