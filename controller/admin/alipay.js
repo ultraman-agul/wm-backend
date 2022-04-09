@@ -2,7 +2,8 @@ import alipaySdk from "../../utils/alipay.js";
 import AlipayFormData from "alipay-sdk/lib/form.js"; // alipay.trade.page.pay 返回的内容为 Form 表单
 import config from "../../config.js";
 import OrderModel from "../../models/order.js";
-
+import RestaurantModel from "../../models/restaurant.js";
+import FoodModel from "../../models/food.js";
 class Pay {
   alipay = async (req, res, next) => {
     const formData = new AlipayFormData.default();
@@ -37,7 +38,23 @@ class Pay {
   successPay = async (req, res, next) => {
     try {
       const { id } = req.query;
-      await OrderModel.updateOne({ id }, { status: "已支付", code: 200 });
+      const data = await OrderModel.findOneAndUpdate(
+        { id },
+        { status: "已支付", code: 200 }
+      );
+      console.log(data);
+      let count = 0;
+      data.foods.forEach(async (item) => {
+        count += item.num;
+        await FoodModel.findOneAndUpdate(
+          { _id: item._id },
+          { $inc: { month_saled: item.num } }
+        );
+      });
+      await RestaurantModel.findOneAndUpdate(
+        { id: data.restaurant_id },
+        { $inc: { month_sales: count } }
+      );
       // res.send("<h2>支付成功</h2>");
       res.send({
         status: 200,

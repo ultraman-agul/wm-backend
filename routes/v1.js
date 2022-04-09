@@ -10,6 +10,7 @@ router.get("/location", Location.location); // 获取当前位置
 router.get("/location_search", Location.locationSearch); // 返回多个搜索地址结果，用于搜索建议
 // 餐厅
 router.get("/all_restaurant", Restaurant.allRestaurant); // 获取所有餐厅
+router.get("/searchRestaurant", Restaurant.searchRestaurant); // 获取所有餐厅
 router.get("/restaurant/:id", Restaurant.getRestaurantById); // 根据id获取餐厅信息
 router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
 router.get("/hasShop", Restaurant.getHasShop); // 判断用户是否拥有商店

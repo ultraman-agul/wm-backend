@@ -14,6 +14,7 @@ class Restaurant extends BaseClass {
       let restaurants = ""; //餐馆信息
       restaurants = await RestaurantModel.find({}, "-_id");
       await this.getDistance(restaurants, lat, lng);
+      restaurants.sort((a, b) => parseInt(a.distance) - parseInt(b.distance));
       res.send({
         status: 200,
         message: "获取全部餐馆列表成功",
@@ -284,6 +285,27 @@ class Restaurant extends BaseClass {
         status: -1,
         message: "修改活动列表失败",
       });
+    }
+  };
+
+  searchRestaurant = async (req, res, next) => {
+    const { keyword } = req.query;
+    try {
+      const reg = new RegExp(keyword, "i"); //不区分大小写
+      const filter = {
+        $or: [
+          // 多字段同时匹配
+          { name: { $regex: reg } },
+          { address: { $regex: keyword, $options: "$i" } }, //  $options: '$i' 忽略大小写
+        ],
+      };
+      const data = await RestaurantModel.find(filter);
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (e) {
+      console.log(e);
     }
   };
 }

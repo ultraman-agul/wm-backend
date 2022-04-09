@@ -42,11 +42,13 @@ class Admin extends BaseClass {
           //   city: cityInfo.city, //登录城市
           avatar: "http://i.waimai.meituan.com/static/img/default-avatar.png",
         };
-        await new AdminModel(createData).save();
+        const newUser = await new AdminModel(createData).save();
         this.setToken(user_id); //设置token
         res.send({
           status: 200,
           token: this.token,
+          username: newUser.username, //用户名
+          avatar: newUser.avatar, //用户头像
           message: "注册用户并登录成功",
         });
       } else if (md5password === user.password) {
