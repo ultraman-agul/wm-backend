@@ -78,11 +78,11 @@ class Admin extends BaseClass {
 
   // 添加用户
   addUser = async (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, password, status, avatar } = req.body;
     console.log(req.body);
     const md5password = this.encryption(password);
     try {
-      const admin = await AdminModel.findOne({ username, status: 2 });
+      const admin = await AdminModel.findOne({ username, status });
       if (!admin) {
         const admin_id = await this.getId("user_id");
         const createData = {
@@ -90,7 +90,8 @@ class Admin extends BaseClass {
           username, //用户名
           password: md5password, //用户密码
           id: admin_id, //用户id
-          status: 2,
+          avatar,
+          status,
         };
         let createAdmin = await new AdminModel(createData).save();
         res.send({
@@ -110,6 +111,42 @@ class Admin extends BaseClass {
       res.send({
         status: -1,
         message: "新增用户失败",
+      });
+    }
+  };
+
+  // 修改用户
+  editUser = async (req, res, next) => {
+    const { username, status, avatar, id } = req.body;
+    console.log(req.body);
+    try {
+      await AdminModel.findOneAndUpdate({ id }, { username, status, avatar });
+      res.send({
+        status: 200,
+        message: "修改用户信息成功",
+      });
+    } catch (err) {
+      console.log("修改用户信息失败", err);
+      res.send({
+        status: -1,
+        message: "修改用户信息失败",
+      });
+    }
+  };
+  // 删除用户
+  deleteUser = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      await AdminModel.deleteOne({ id });
+      res.send({
+        status: 200,
+        message: "删除用户成功",
+      });
+    } catch (err) {
+      console.log("删除用户失败", err);
+      res.send({
+        status: -1,
+        message: "删除用户失败",
       });
     }
   };

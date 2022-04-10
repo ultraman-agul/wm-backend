@@ -218,6 +218,28 @@ class Order extends BaseClass {
       });
     }
   };
+
+  // 统计用户、商家、订单数量
+  getCounts = async (req, res, next) => {
+    try {
+      const userNum = await AdminModel.count();
+      const restaurantNum = await RestaurantModel.count();
+      const orderNum = await OrderModel.count();
+      res.send({
+        status: 200,
+        data: {
+          userNum,
+          restaurantNum,
+          orderNum,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+      });
+    }
+  };
 }
 
 export default new Order();

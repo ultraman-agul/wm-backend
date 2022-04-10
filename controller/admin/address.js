@@ -1,5 +1,6 @@
 import BaseClass from "../../prototype/baseClass.js";
 import AddressModel from "../../models/address.js";
+import OrderModel from "../../models/order.js";
 class Address extends BaseClass {
   constructor() {
     super();
@@ -59,6 +60,31 @@ class Address extends BaseClass {
       res.send({
         status: -1,
         message: "新增收货地址失败",
+      });
+    }
+  };
+
+  // 获取商家下的订单用户地址
+  getAddress = async (req, res, next) => {
+    try {
+      let data = [];
+      const { restaurant_id } = req.query;
+      if (restaurant_id) {
+        data = await OrderModel.find({ restaurant_id }).populate([
+          { path: "address" },
+        ]);
+        data = data.map((item) => item.address);
+      } else {
+        data = await AddressModel.find();
+      }
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
       });
     }
   };
