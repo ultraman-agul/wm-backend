@@ -240,6 +240,61 @@ class Order extends BaseClass {
       });
     }
   };
+
+  getAllOrder = async (req, res, next) => {
+    let { offset = 0, limit = 10 } = req.query;
+    try {
+      let orders = await OrderModel.find({}, "-_id")
+        .populate([{ path: "restaurant" }, { path: "address" }])
+        .limit(Number(limit))
+        .sort({ create_time_timestamp: -1 })
+        .skip(Number(offset));
+
+      let count = await OrderModel.count();
+      res.send({
+        status: 200,
+        data: orders,
+        totalNum: count,
+        message: "获取我的订单列表成功",
+      });
+    } catch (err) {
+      console.log("获取订单列表失败", err);
+      res.send({
+        status: -1,
+        message: "获取订单列表失败",
+      });
+    }
+  };
+
+  getTodayOrder = async (req, res, next) => {
+    let { offset = 0, limit = 10 } = req.query;
+    try {
+      let orders = await OrderModel.find(
+        {
+          create_time_timestamp: { $gte: moment().startOf("day").format("X") }, // 获取时间大于今日凌晨
+        },
+        "-_id"
+      )
+        .populate([{ path: "restaurant" }, { path: "address" }])
+        .limit(Number(limit))
+        .sort({ create_time_timestamp: -1 })
+        .skip(Number(offset));
+
+      let allData = await OrderModel.count();
+      res.send({
+        status: 200,
+        data: orders,
+        totalNum: allData,
+        message: "获取我的订单列表成功",
+      });
+    } catch (err) {
+      console.log("获取订单列表失败", err);
+      res.send({
+        status: -1,
+        message: "获取订单列表失败",
+      });
+    }
+  };
 }
 
 export default new Order();

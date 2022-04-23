@@ -16,6 +16,7 @@ router.get("/allRestaurantNoLoc", Restaurant.allRestaurantNoLoc);
 router.get("/hasShop", Restaurant.getHasShop); // 判断用户是否拥有商店
 router.post("/createShop", Restaurant.createShop); // 创建商店
 router.get("/getShopInfo", Restaurant.getShopInfo); // 获取商店信息
+router.get("/deleteShop", Restaurant.deleteShop); // 删除商店
 router.get("/updateActivities", Restaurant.updateActivities); // 更新活动列表
 router.post("/updateShop", Restaurant.updateShop); // 更新活动列表
 // 分类，食物
@@ -34,6 +35,8 @@ router.get("/getOrderByRestaurantId", Order.getOrderByRestaurantId); // 获取�
 router.get("/getTodayOrderByRestaurantId", Order.getTodayOrderByRestaurantId); // 获取商家的今日订单
 router.get("/orderGroupByDay", Order.orderGroupByDay); // 统计每天的订单数量
 router.get("/getCounts", Order.getCounts); // 统计用户、商家、订单数量
+router.get("/getAllOrder", Order.getAllOrder); // 获取系统所有订单
+router.get("/getTodayOrder", Order.getTodayOrder); // 获取系统今天订单
 
 // 评价
 router.post("/makeComment", Comment.makeComment); // 获取订单详细信息

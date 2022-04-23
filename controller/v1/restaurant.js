@@ -227,8 +227,14 @@ class Restaurant extends BaseClass {
   // 获取商家的店铺,根据商家id获取
   getShopInfo = async (req, res, next) => {
     try {
-      const { user_id } = req.user;
-      const data = await RestaurantModel.findOne({ user_id });
+      const { restaurant_id } = req.query;
+      let data;
+      if (restaurant_id) {
+        data = await RestaurantModel.findOne({ id: restaurant_id });
+      } else {
+        const { user_id } = req.user;
+        data = await RestaurantModel.findOne({ user_id });
+      }
       if (data) {
         res.send({
           status: 200,
@@ -284,6 +290,23 @@ class Restaurant extends BaseClass {
       res.send({
         status: -1,
         message: "修改活动列表失败",
+      });
+    }
+  };
+
+  deleteShop = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      await RestaurantModel.findOneAndDelete({ id });
+      res.send({
+        status: 200,
+        message: "删除店铺成功",
+      });
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: -1,
+        message: "删除店铺失败",
       });
     }
   };
