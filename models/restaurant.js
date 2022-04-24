@@ -6,6 +6,7 @@ const restaurantSchema = new Schema({
   id: Number,
   user_id: Number, //餐馆所属用户id
   name: String,
+  status: Number, // 店铺状态 -1表示未注册  1表示注册
   pic_url: String, //店家图片地址
   month_sales: Number, //月售几笔
   month_sales_tip: String, //月售几笔

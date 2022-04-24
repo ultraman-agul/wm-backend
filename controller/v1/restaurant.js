@@ -188,6 +188,7 @@ class Restaurant extends BaseClass {
         comment_number: 0,
         bulletin,
         delivery,
+        status: -1,
       };
       const shop = new RestaurantModel(data);
       await shop.save();
@@ -331,6 +332,52 @@ class Restaurant extends BaseClass {
       console.log(e);
     }
   };
+
+  // 获取申请注册的餐馆列表
+  getRegistingRestaurant = async (req, res, next) => {
+    try {
+      const data = await RestaurantModel.aggregate([
+        {
+          $match: {
+            status: {
+              $lte: -1,
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "admins",
+            localField: "user_id",
+            foreignField: "id",
+            as: "userinfo",
+          },
+        },
+      ]);
+      res.send({
+        status: 200,
+        data,
+      });
+    } catch (e) {
+      res.send({
+        status: -1,
+      });
+    }
+  };
+
+  async agreeRegister(req, res, next) {
+    const { id } = req.query;
+    try {
+      await RestaurantModel.updateOne({ id }, { status: 1 });
+      res.send({
+        status: 200,
+        message: "已同意注册",
+      });
+    } catch (e) {
+      res.send({
+        status: -1,
+      });
+    }
+  }
 }
 
 export default new Restaurant();

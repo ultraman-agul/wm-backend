@@ -18,7 +18,10 @@ router.post("/createShop", Restaurant.createShop); // 创建商店
 router.get("/getShopInfo", Restaurant.getShopInfo); // 获取商店信息
 router.get("/deleteShop", Restaurant.deleteShop); // 删除商店
 router.get("/updateActivities", Restaurant.updateActivities); // 更新活动列表
-router.post("/updateShop", Restaurant.updateShop); // 更新活动列表
+router.post("/updateShop", Restaurant.updateShop); // 更新商店信息
+router.get("/getRegistingRestaurant", Restaurant.getRegistingRestaurant); // 获取申请注册商店列表
+router.get("/agreeRegister", Restaurant.agreeRegister); // 更新活动列表
+
 // 分类，食物
 router.post("/add_category", Foods.addCategory); // 餐厅添加食品分类
 router.get("/get_categories", Foods.getCategories); // 获取餐厅的食品分类
