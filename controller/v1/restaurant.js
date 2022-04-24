@@ -59,7 +59,7 @@ class Restaurant extends BaseClass {
 
   //根据id获取指定餐馆信息
   async getRestaurantById(req, res, next) {
-    const id = req.params.id;
+    const id = req.query.id;
     if (!id) {
       res.send({
         status: -1,

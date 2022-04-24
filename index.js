@@ -54,6 +54,8 @@ app.use(
       "/upload",
       "/",
       "/v1/all_restaurant",
+      "/v1/restaurant",
+      "/v1/getFoods",
       "/v1/location",
       "/v1/location_search",
       "/alipay/successPay",
