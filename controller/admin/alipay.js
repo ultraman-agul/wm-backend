@@ -1,6 +1,5 @@
 import alipaySdk from "../../utils/alipay.js";
 import AlipayFormData from "alipay-sdk/lib/form.js"; // alipay.trade.page.pay 返回的内容为 Form 表单
-import config from "../../config.js";
 import OrderModel from "../../models/order.js";
 import RestaurantModel from "../../models/restaurant.js";
 import FoodModel from "../../models/food.js";
@@ -21,7 +20,7 @@ class Pay {
     // formData.addField("returnUrl", "https://opendocs.alipay.com");
     formData.addField(
       "returnUrl",
-      `${config.Server_URL}/alipay/successPay?id=${req.body.id}`
+      `http://1.14.132.215/wm-app/#/successPay?id=${req.body.id}`
     );
     const result = await alipaySdk.exec(
       "alipay.trade.page.pay", // 统一收单下单并支付页面接口
